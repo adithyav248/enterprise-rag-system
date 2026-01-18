@@ -9,16 +9,18 @@ from models import User, UserCreate, Token
 from auth import get_password_hash, verify_password, create_access_token, get_current_user, get_admin_user
 import rag
 from dotenv import load_dotenv
+
 load_dotenv()
 
 app = FastAPI()
 
-# CORS
-
+# --- CORS SETTINGS ---
+# We allow both localhost (for testing) and your specific Vercel URL
 origins = [
-    "http://localhost:5173",  # Keep this for local development
-    "https://enterprise-rag-system-three.vercel.app"  # Your specific Vercel Domain
+    "http://localhost:5173",
+    "https://enterprise-rag-system-three.vercel.app" 
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -26,6 +28,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# ---------------------
 
 @app.on_event("startup")
 def on_startup():
@@ -65,13 +68,12 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = D
 @app.post("/upload")
 async def upload_document(
     file: UploadFile = File(...), 
-    current_user: User = Depends(get_admin_user) # Only Admin
+    current_user: User = Depends(get_admin_user)
 ):
     file_location = f"uploads/{file.filename}"
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
     
-    # Trigger Vector Ingestion
     rag.ingest_file(file_location)
     
     return {"filename": file.filename, "status": "Ingested into Vector DB"}
@@ -83,8 +85,6 @@ def chat(query: str, current_user: User = Depends(get_current_user)):
         return {"answer": "No documents uploaded yet.", "sources": []}
     
     response = qa({"query": query})
-    
-    # Extract source file names
     sources = list(set([doc.metadata['source'] for doc in response['source_documents']]))
     
     return {"answer": response['result'], "sources": sources}
