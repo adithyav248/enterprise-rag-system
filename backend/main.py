@@ -14,9 +14,14 @@ load_dotenv()
 app = FastAPI()
 
 # CORS
+
+origins = [
+    "http://localhost:5173",  # Keep this for local development
+    "https://enterprise-rag-system-three.vercel.app"  # Your specific Vercel Domain
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
