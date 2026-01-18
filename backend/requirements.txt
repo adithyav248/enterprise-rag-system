@@ -12,3 +12,4 @@ faiss-cpu
 pypdf
 python-dotenv
 sentence-transformers
+# Force Rebuild for Python 3.11
