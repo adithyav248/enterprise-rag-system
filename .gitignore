@@ -1,0 +1,21 @@
+# Dependency directories
+node_modules/
+venv/
+__pycache__/
+
+# Environment variables (SECURITY RISK)
+.env
+
+# Database and Vector Store
+*.db
+faiss_index/
+uploads/
+
+# Build outputs
+dist/
+build/
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db
