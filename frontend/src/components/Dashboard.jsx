@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 const Dashboard = ({ token, role }) => {
     const [file, setFile] = useState(null);
@@ -25,7 +26,7 @@ const Dashboard = ({ token, role }) => {
 
         try {
             setLoading(true);
-            await axios.post('http://localhost:8000/upload', formData, {
+            await axios.post(`${API_URL}/upload`, formData, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             alert('File uploaded successfully!');
@@ -46,7 +47,7 @@ const Dashboard = ({ token, role }) => {
         setQuery('');
         
         try {
-            const res = await axios.post('http://localhost:8000/chat', null, {
+            const res = await axios.post(`${API_URL}/chat`, null, {
                 params: { query: query },
                 headers: { 'Authorization': `Bearer ${token}` }
             });

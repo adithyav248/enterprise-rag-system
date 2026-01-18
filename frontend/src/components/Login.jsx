@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 const Login = ({ setAuth }) => {
     const [username, setUsername] = useState('');
@@ -20,7 +21,7 @@ const Login = ({ setAuth }) => {
                 payload.append('password', password);
             }
 
-            const res = await axios.post(`http://localhost:8000${endpoint}`, payload);
+            const res = await axios.post(`${API_URL}${endpoint}`, payload);
             setAuth(res.data.access_token, res.data.role);
         } catch (err) {
             alert('Error: ' + (err.response?.data?.detail || err.message));
